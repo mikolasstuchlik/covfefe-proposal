@@ -157,15 +157,3 @@ enum GrammarBuilder {
         return Grammar(grammar: grammar.map(Production.init(nonTerminal:product:)))
     }
 }
-
-func foo() -> Grammar {
-    Grammar.build {
-        %"person"   → %"name" .. %"space" .. (%"name" .. %"space")-? .. %"surname"
-        %"name"     → ^"Mikolas"
-                    | ^"Jan"
-                    | ^"Lukas"
-        %"surname"  → ^"Stuchlik"
-                    | ^"Dvorak"
-        %"space"   → ^" "
-    }
-}

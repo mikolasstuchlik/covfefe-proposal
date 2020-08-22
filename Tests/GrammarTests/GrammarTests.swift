@@ -4,14 +4,24 @@ import Covfefe
 
 final class GrammarTests: XCTestCase {
     func testExample() {
-        let string = foo().description
-        print(string)
-        let grammar = try! Covfefe.Grammar(ebnf: string, start: "obcan")
+        let grammarDsl = Grammar.build {
+            %"person"   → %"name" .. %"space" .. (%"name" .. %"space")-? .. %"surname"
+            %"name"     → ^"Mikolas"
+                        | ^"Jan"
+                        | ^"Lukas"
+            %"surname"  → ^"Stuchlik"
+                        | ^"Dvorak"
+            %"space"    → ^" "
+        }
+        
+        let grammar = try! Grammar(ebnf: grammarDsl.description, start: "person")
         
         let parser = EarleyParser(grammar: grammar)
 
-        let syntaxTree = try! parser.syntaxTree(for: "Matěj Kašpar Jirásek")
-        print(syntaxTree)
+        let syntaxTree = try! parser.syntaxTree(for: "Mikolas Stuchlik")
+        
+        print(grammarDsl.description)
+        
     }
 
     static var allTests = [
