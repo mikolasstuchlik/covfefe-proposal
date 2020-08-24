@@ -1,3 +1,5 @@
+import Foundation
+
 infix operator → : AssignmentPrecedence
 
 func →(_ nonTerminal: NonTerminal, _ prouct: Product) -> Production {
@@ -18,6 +20,14 @@ prefix operator ^
 
 prefix func ^(_ content: String) -> Terminal {
     Terminal(content: content)
+}
+
+prefix func ^<T: Sequence>(_ content: T) -> OptionProduct where T.Element: StringProtocol {
+    OptionProduct(list: content.map { Terminal(content: "\($0)") } )
+}
+
+prefix func ^(_ content: CharacterSet) -> OptionProduct {
+    ^content.allCharacters().map { $0.description }
 }
 
 infix operator .. : MultiplicationPrecedence
@@ -72,6 +82,21 @@ struct Terminal: Product {
 
     var description: String {
         "\"\(content.covfefeEscaped)\""
+    }
+}
+
+struct TerminalRange: Product {
+    let start: Character
+    let end: Character
+
+    
+    init(from start: Character, to end: Character) {
+        self.start = start
+        self.end = end
+    }
+
+    var description: String {
+        "\"\(start)\" ... \"\(end)\""
     }
 }
 
@@ -177,6 +202,20 @@ extension String {
                 return String(char)
             }
         }.joined()
+    }
+}
+
+extension CharacterSet {
+    func allCharacters() -> [Character] {
+        var result: [Character] = []
+        for plane: UInt8 in 0...16 where self.hasMember(inPlane: plane) {
+            for unicode in UInt32(plane) << 16 ..< UInt32(plane + 1) << 16 {
+                if let uniChar = UnicodeScalar(unicode), self.contains(uniChar) {
+                    result.append(Character(uniChar))
+                }
+            }
+        }
+        return result
     }
 }
 

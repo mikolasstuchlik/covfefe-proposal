@@ -185,7 +185,24 @@ final class GrammarTests: XCTestCase {
                 | ^"token"
         }
         
-        let finalGrammar = [grammarDsl1, grammarDsl2, grammarDsl3, grammarDsl4, grammarDsl5].reduce(GrammarDsl.empty, GrammarDsl.formUnion(from:and:))
+        let extensionDsl = GrammarDsl.build {
+            %"Char"
+                → TerminalRange(from: "A", to: "Z")
+                | TerminalRange(from: "a", to: "z")
+                | TerminalRange(from: "0", to: "9")
+
+            %"whitespaces"
+                → ^CharacterSet.whitespaces
+                | ^"\\n"
+
+            %"NCName"
+                → (%"Char")+
+
+        }
+        
+        print(extensionDsl.description)
+        
+        let finalGrammar = [grammarDsl1, grammarDsl2, grammarDsl3, grammarDsl4, grammarDsl5, extensionDsl].reduce(GrammarDsl.empty, GrammarDsl.formUnion(from:and:))
         
         let grammar = try! Grammar(ebnf: finalGrammar.description, start: "topLevel")
         
