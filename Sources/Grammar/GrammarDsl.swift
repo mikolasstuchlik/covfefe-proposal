@@ -81,7 +81,7 @@ struct Terminal: Product {
     let content: String
 
     var description: String {
-        "\"\(content.covfefeEscaped)\""
+        "\"\(content)\""
     }
 }
 
@@ -187,21 +187,6 @@ struct GrammarDsl: CustomStringConvertible {
     
     static func formUnion(from lGrammar: GrammarDsl, and rGrammar: GrammarDsl) -> GrammarDsl {
         lGrammar.union(with: rGrammar)
-    }
-}
-
-extension String {
-    var covfefeEscaped: String {
-        self.map { char -> String in
-            switch char {
-            case #"\"#:
-                return #"\\"#
-            case "\"":
-                return "\\\""
-            default:
-                return String(char)
-            }
-        }.joined()
     }
 }
 
