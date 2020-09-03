@@ -13,6 +13,7 @@ let gir_ignorables = #"""
 default namespace core = "http://www.gtk.org/introspection/core/1.0"
 namespace c = "http://www.gtk.org/introspection/c/1.0"
 namespace glib = "http://www.gtk.org/introspection/glib/1.0"
+
 """#
 
 let gir_doc_only = #"""
@@ -20,6 +21,7 @@ let gir_doc_only = #"""
    ## doc b
 
 ## doc c
+
 """#
 
 let gir_grammar = #"""
@@ -48,4 +50,5 @@ grammar {
     }
 
 }
+
 """#
